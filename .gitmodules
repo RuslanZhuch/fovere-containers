@@ -1,0 +1,3 @@
+[submodule "hadgefog-alloc"]
+	path = hadgefog-alloc
+	url = git@github.com:RuslanZhuch/hadgefog-alloc.git

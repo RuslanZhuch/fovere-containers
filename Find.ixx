@@ -4,12 +4,13 @@ module;
 #include <optional>
 
 export module fovere.Find;
+import fovere.Core;
 
 export namespace fovere
 {
 
-	[[nodiscard]] constexpr std::optional<size_t> find(const auto& container, size_t beginId,
-		size_t endId, auto&& value)
+	[[nodiscard]] constexpr std::optional<size_t> find(const Core::CtContainerContinuous auto& container, 
+		size_t beginId,	size_t endId, auto&& value)
 	{
 		for (size_t id{ beginId }; id < endId; ++id)
 		{

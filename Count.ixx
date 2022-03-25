@@ -1,9 +1,10 @@
 export module fovere.Count;
+import fovere.Core;
 
 export namespace fovere
 {
 
-	[[nodiscard]] constexpr size_t count(const auto& container, auto&& value)
+	[[nodiscard]] constexpr size_t count(const Core::CtContainerContinuous auto& container, auto&& value)
 	{
 
 		size_t count{ 0 };

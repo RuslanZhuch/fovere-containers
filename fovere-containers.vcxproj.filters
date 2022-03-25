@@ -8,6 +8,12 @@
     <Filter Include="lib">
       <UniqueIdentifier>{e8685ac1-55ee-42d5-9078-6fcb55d76dc0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="lib\Containers">
+      <UniqueIdentifier>{c69e0b4b-7222-4f1e-b12d-490dd7bde878}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib\Iterators">
+      <UniqueIdentifier>{13fc77d7-50a8-4948-bc08-8d528444e41e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Len.ixx">
@@ -33,6 +39,33 @@
     </ClCompile>
     <ClCompile Include="Accumulate.ixx">
       <Filter>lib</Filter>
+    </ClCompile>
+    <ClCompile Include="ArrayFixed.ixx">
+      <Filter>lib\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="Core.ixx">
+      <Filter>lib</Filter>
+    </ClCompile>
+    <ClCompile Include="IteratorMonodirectional.ixx">
+      <Filter>lib\Iterators</Filter>
+    </ClCompile>
+    <ClCompile Include="IteratorsCore.ixx">
+      <Filter>lib\Iterators</Filter>
+    </ClCompile>
+    <ClCompile Include="ArrayStatic.ixx">
+      <Filter>lib\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils.ixx">
+      <Filter>lib</Filter>
+    </ClCompile>
+    <ClCompile Include="Adapter.ixx">
+      <Filter>lib</Filter>
+    </ClCompile>
+    <ClCompile Include="ArrayStaticStable.ixx">
+      <Filter>lib\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="IteratorArrayStable.ixx">
+      <Filter>lib\Iterators</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,5 +1,8 @@
 #include "pch.h"
 
+import fovere.Core;
+import fovere.Iterators.Monodirectional;
+
 import fovere.Len;
 import fovere.Get;
 import fovere.Insert;
@@ -9,33 +12,14 @@ import fovere.Find;
 import fovere.Fill;
 import fovere.Accumulate;
 
-template <typename T, size_t numOfElements>
-class TestArray
-{
-public:
-	using TVal = typename T;
+import fovere.Array.Fixed;
 
-public:
-	[[nodiscard]] constexpr auto getLen() const noexcept
-	{
-		return numOfElements;
-	}
+template <typename T, size_t len>
+using TestArray = fovere::Array::Fixed<T, len>;
 
-	[[nodiscard]] constexpr T& operator[](auto id) noexcept
-	{
-		return this->data[id];
-	}
+static_assert(fovere::Core::CtContainerContinuous<TestArray<int, 5>>);
 
-	[[nodiscard]] constexpr T operator[](auto id) const noexcept
-	{
-		return this->data[id];
-	}
-
-private:
-	T data[numOfElements];
-};
-
-TEST(Manipulators, tsLen)
+TEST(TypeContinuous, tsLen)
 {
 	{
 		TestArray<int, 5> arr;
@@ -51,7 +35,7 @@ TEST(Manipulators, tsLen)
 	}
 }
 
-TEST(Manipulators, tsGet)
+TEST(TypeContinuous, tsGet)
 {
 	{
 		TestArray<int, 5> arr;
@@ -70,7 +54,7 @@ TEST(Manipulators, tsGet)
 	}
 }
 
-TEST(Manipulators, tsInsert)
+TEST(TypeContinuous, tsInsert)
 {
 	{
 		TestArray<int, 5> arr;
@@ -90,7 +74,7 @@ TEST(Manipulators, tsInsert)
 	}
 }
 
-TEST(Manipulators, tsContain)
+TEST(TypeContinuous, tsContain)
 {
 	{
 		TestArray<int, 5> arr;
@@ -111,7 +95,7 @@ TEST(Manipulators, tsContain)
 	}
 }
 
-TEST(Manipulators, tsCount)
+TEST(TypeContinuous, tsCount)
 {
 	{
 		TestArray<int, 5> arr;
@@ -132,7 +116,7 @@ TEST(Manipulators, tsCount)
 	}
 }
 
-TEST(Manipulators, tsFind)
+TEST(TypeContinuous, tsFind)
 {
 	{
 		TestArray<int, 5> arr;
@@ -166,7 +150,7 @@ TEST(Manipulators, tsFind)
 	}
 }
 
-TEST(Manipulators, tsFill)
+TEST(TypeContinuous, tsFill)
 {
 
 	{
@@ -203,7 +187,7 @@ TEST(Manipulators, tsFill)
 
 }
 
-TEST(Manipulators, tsAccumulate)
+TEST(TypeContinuous, tsAccumulate)
 {
 
 	{

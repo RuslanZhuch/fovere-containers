@@ -20,13 +20,27 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Accumulate.ixx" />
+    <ClCompile Include="Adapter.ixx" />
+    <ClCompile Include="ArrayStaticStable.ixx" />
+    <ClCompile Include="Core.ixx" />
     <ClCompile Include="Count.ixx" />
     <ClCompile Include="Contain.ixx" />
     <ClCompile Include="Fill.ixx" />
     <ClCompile Include="Find.ixx" />
+    <ClCompile Include="ArrayFixed.ixx" />
     <ClCompile Include="Get.ixx" />
     <ClCompile Include="Insert.ixx" />
+    <ClCompile Include="IteratorArrayStable.ixx" />
+    <ClCompile Include="IteratorMonodirectional.ixx" />
+    <ClCompile Include="IteratorsCore.ixx" />
     <ClCompile Include="Len.ixx" />
+    <ClCompile Include="ArrayStatic.ixx" />
+    <ClCompile Include="Utils.ixx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="hadgefog-alloc\hadgefog-alloc.vcxproj">
+      <Project>{a89af75a-8687-407e-9193-eebbd007b3c9}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -102,6 +116,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <EnableModules>true</EnableModules>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -121,6 +136,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <EnableModules>true</EnableModules>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -140,6 +156,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <EnableModules>true</EnableModules>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -159,6 +176,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <EnableModules>true</EnableModules>
     </ClCompile>
     <Link>
       <SubSystem>

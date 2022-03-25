@@ -3,11 +3,12 @@ module;
 #include <utility>
 
 export module fovere.Accumulate;
+import fovere.Core;
 
 export namespace fovere
 {
 
-	template <typename TContainer, typename TFunc>
+	template <Core::CtContainerContinuous TContainer, typename TFunc>
 	[[nodiscard]] constexpr auto accumulate(const TContainer& container, size_t beginId, size_t endId,
 		TFunc func) noexcept
 	{
@@ -24,7 +25,7 @@ export namespace fovere
 
 	}
 
-	template <typename TContainer>
+	template <Core::CtContainerContinuous TContainer>
 	[[nodiscard]] constexpr auto accumulate(const TContainer& container, size_t beginId, size_t endId) noexcept
 	{
 
@@ -33,13 +34,13 @@ export namespace fovere
 
 	}
 
-	template <typename TContainer>
+	template <Core::CtContainerContinuous TContainer>
 	[[nodiscard]] constexpr auto accumulate(const TContainer& container, auto func) noexcept
 	{
 		return accumulate<TContainer, decltype(func)>(container, 0, container.getLen(), func);
 	}
 
-	template <typename TContainer>
+	template <Core::CtContainerContinuous TContainer>
 	[[nodiscard]] constexpr auto accumulate(const TContainer& container) noexcept
 	{
 		return accumulate<TContainer>(container, 0, container.getLen());
