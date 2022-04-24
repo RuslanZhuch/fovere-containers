@@ -52,13 +52,7 @@
     <ClCompile Include="IteratorsCore.ixx">
       <Filter>lib\Iterators</Filter>
     </ClCompile>
-    <ClCompile Include="ArrayStatic.ixx">
-      <Filter>lib\Containers</Filter>
-    </ClCompile>
     <ClCompile Include="Utils.ixx">
-      <Filter>lib</Filter>
-    </ClCompile>
-    <ClCompile Include="Adapter.ixx">
       <Filter>lib</Filter>
     </ClCompile>
     <ClCompile Include="ArrayStaticStable.ixx">
@@ -66,6 +60,18 @@
     </ClCompile>
     <ClCompile Include="IteratorArrayStable.ixx">
       <Filter>lib\Iterators</Filter>
+    </ClCompile>
+    <ClCompile Include="ArrayStatic.ixx">
+      <Filter>lib\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="ArrayDynamicCompact.ixx">
+      <Filter>lib\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="MapSimple.ixx">
+      <Filter>lib\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="ArrayUniversal.ixx">
+      <Filter>lib\Containers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

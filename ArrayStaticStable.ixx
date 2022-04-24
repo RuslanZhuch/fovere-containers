@@ -8,8 +8,8 @@ export import fovere.Utils;
 
 import :Iterator;
 
-import SourcesCommon;
-import AlgPool;
+import hfog.Sources.Common;
+import hfog.Algorithms.Pool;
 
 export namespace fovere::Array
 {
@@ -18,8 +18,8 @@ export namespace fovere::Array
 	class StaticStable
 	{
 
-		using Alloc = hfog::Algorithms::Pool<Source, alignof(T), capacity,
-			hfog::MemoryUtils::Align<alignof(T)>>;
+		using Alloc = hfog::Algorithms::Pool<Source, sizeof(T), capacity,
+			hfog::MemoryUtils::Align<sizeof(T)>>;
 
 		struct ChunckNode
 		{
@@ -30,7 +30,7 @@ export namespace fovere::Array
 
 	public:
 
-		[[nodiscard]] size_t append(auto&& value) noexcept 
+		size_t append(auto&& value) noexcept 
 			requires std::same_as<std::remove_cvref_t<decltype(value)>, std::remove_cv_t<T>>
 		{
 
@@ -81,7 +81,7 @@ export namespace fovere::Array
 
 			hfog::MemoryBlock memoryToDelete;
 			memoryToDelete.ptr = reinterpret_cast<byte_t*>(this->memoryEntry + elId);
-			memoryToDelete.size = alignof(T);
+			memoryToDelete.size = sizeof(T);
 			this->alloc.deallocate(memoryToDelete);
 
 			auto currChunck{ &this->chuncks[elId] };
@@ -103,6 +103,38 @@ export namespace fovere::Array
 				this->firstChunck = nextChunck;
 
 			--this->localLen;
+
+		}
+
+		void precache() noexcept
+		{
+			T* sortedNodes[capacity];
+			for (auto& n : sortedNodes)
+				n = nullptr;
+
+			auto currChunck{ this->firstChunck };
+			while (currChunck != nullptr)
+			{
+				auto id{ currChunck->data - this->memoryEntry };
+				sortedNodes[id] = currChunck->data;
+				currChunck = currChunck->next;
+			}
+
+			size_t contId{ 0 };
+			auto currData{ sortedNodes[contId] };
+			auto currReal{ this->firstChunck };
+
+			while (currReal != nullptr)
+			{
+				while((currData == nullptr) && (contId < capacity))
+					currData = sortedNodes[++contId];
+				if (currData != currReal->data)
+				{
+					currReal->data = currData;
+				}
+				currData = sortedNodes[++contId];
+				currReal = currReal->next;
+			}
 
 		}
 

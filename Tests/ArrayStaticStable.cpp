@@ -1,6 +1,6 @@
 #include "pch.h"
 
-import SourceStack;
+import hfog.Sources.Stack;
 import fovere.Array.StaticStable;
 
 using namespace hfog::MemoryUtils::Literals;
@@ -156,22 +156,24 @@ TEST(ArrayStaticStable, tsRandomAccess)
 
 }
 
-static void createReversed(auto& arr)
+static void createReversed(auto& arr, size_t numOfElements = 4)
 {
-	auto el0Id{ arr.append(1) };
-	auto el1Id{ arr.append(2) };
-	auto el2Id{ arr.append(3) };
-	auto el3Id{ arr.append(4) };
 
-	arr.remove(3);
-	arr.remove(2);
-	arr.remove(1);
-	arr.remove(0);
+	for (int id{ 0 }; id < numOfElements; ++id)
+	{
+		auto elId{ arr.append(id + 1) };
+	}
 
-	el0Id = arr.append(1);
-	el1Id = arr.append(2);
-	el2Id = arr.append(3);
-	el3Id = arr.append(4);
+	for (size_t id{ 0 }; id < numOfElements; ++id)
+	{
+		arr.remove(numOfElements - id - 1);
+	}
+
+	for (int id{ 0 }; id < numOfElements; ++id)
+	{
+		auto elId{ arr.append(id + 1) };
+	}
+
 }
 
 template <typename T>
@@ -216,6 +218,90 @@ TEST(ArrayStaticStable, tsIteration)
 			EXPECT_EQ(el, static_cast<int>(10 + ++id));
 		}
 
+	}
+
+}
+
+TEST(ArrayStaticStable, tsPrecache)
+{
+
+	using source_t = hfog::Sources::Stack<20_B, hfog::GarbageWriter::Default>;
+
+	{
+		static constexpr size_t numOfElements{ 4 };
+		fovere::Array::StaticStable<source_t, int, numOfElements> arr;
+		createReversed(arr, numOfElements);
+
+		arr.precache();
+
+		size_t cnt{ 0 };
+		for (size_t id{ 0 }; const auto el : arr)
+		{
+			++cnt;
+			EXPECT_EQ(el, static_cast<int>(numOfElements - id++));
+		}
+		EXPECT_EQ(cnt, numOfElements);
+	}
+
+	{
+		static constexpr size_t numOfElements{ 5 };
+		fovere::Array::StaticStable<source_t, int, numOfElements> arr;
+		createReversed(arr, numOfElements);
+
+		arr.precache();
+
+		size_t cnt{ 0 };
+		for (size_t id{ 0 }; const auto el : arr)
+		{
+			++cnt;
+			EXPECT_EQ(el, static_cast<int>(numOfElements - id++));
+		}
+		EXPECT_EQ(cnt, numOfElements);
+	}
+
+	{
+		static constexpr size_t numOfElements{ 5 };
+		fovere::Array::StaticStable<source_t, int, numOfElements> arr;
+		createReversed(arr, numOfElements);
+
+		arr.remove(1);
+		arr.append(6);
+
+		arr.remove(4);
+		arr.append(7);
+
+		arr.precache();
+
+		{
+			int expected[]{ 5, 6, 3, 2, 7 };
+			size_t cnt{ 0 };
+			for (size_t id{ 0 }; const auto el : arr)
+			{
+				++cnt;
+				EXPECT_EQ(el, expected[id++]);
+			}
+			EXPECT_EQ(cnt, numOfElements);
+		}
+
+		arr.remove(2);
+		arr.precache();
+		{
+			int expected[]{ 5, 3, 2, 7 };
+			size_t cnt{ 0 };
+			for (size_t id{ 0 }; const auto el : arr)
+			{
+				++cnt;
+				EXPECT_EQ(el, expected[id++]);
+			}
+			EXPECT_EQ(cnt, numOfElements - 1);
+		}
+
+	}
+
+	{
+		static constexpr size_t numOfElements{ 4 };
+		fovere::Array::StaticStable<source_t, int, numOfElements> arr;
+		arr.precache();
 	}
 
 }

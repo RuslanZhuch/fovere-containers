@@ -1,21 +1,27 @@
 module;
 #include <cassert>
 
-export module fovere.Adapter;
+export module fovere.Array.DynamicCompact;
+export import fovere.Utils;
 
-import hfogCore;
+import hfog.Core;
 
-export namespace fovere
+export namespace fovere::Array
 {
 
 	template<hfog::CtAllocator Alloc, typename T>
-	class Adapter
+	class DynamicCompact
 	{
 	public:
+		DynamicCompact(Alloc* alloc)
+			:allocator(alloc)
+		{}
+
 		[[nodiscard]] size_t append(T&& value) noexcept
 		{
-			const auto memBlock{ allocator.allocate(alignof(T)) };
-			assert(memBlock.ptr != nullptr);
+			const auto memBlock{ allocator->allocate(sizeof(T)) };
+			if (memBlock.ptr == nullptr)
+				return invalidIndex;
 			if (this->memoryEntry == nullptr)
 				this->memoryEntry = reinterpret_cast<T*>(memBlock.ptr);
 			*(this->memoryEntry + this->localLen) = value;
@@ -55,8 +61,8 @@ export namespace fovere
 			--this->localLen;
 			hfog::MemoryBlock data;
 			data.ptr = reinterpret_cast<byte_t*>(this->memoryEntry + this->localLen);
-			data.size = alignof(T);
-			this->allocator.deallocate(data);
+			data.size = sizeof(T);
+			this->allocator->deallocate(data);
 
 		}
 
@@ -79,19 +85,20 @@ export namespace fovere
 			this->localLen -= elementsToDelete;
 			hfog::MemoryBlock data;
 			data.ptr = reinterpret_cast<byte_t*>(this->memoryEntry + this->localLen);
-			data.size = elementsToDelete * alignof(T);
-			this->allocator.deallocate(data);
+			data.size = elementsToDelete * sizeof(T);
+			this->allocator->deallocate(data);
 
 		}
 
-		void insert(size_t insertAfterId, T&& value)
+		[[nodiscard]] bool insert(size_t insertAfterId, T&& value)
 		{
 
 			assert(this->localLen != 0);
 			assert(insertAfterId < this->localLen);
 
-			const auto memBlock{ this->allocator.allocate(alignof(T)) };
-			assert(memBlock.ptr != nullptr);
+			const auto memBlock{ this->allocator->allocate(sizeof(T)) };
+			if (memBlock.ptr == nullptr)
+				return false;
 
 			auto currId{ this->localLen++ };
 			while (currId > insertAfterId)
@@ -102,16 +109,18 @@ export namespace fovere
 
 			*(this->memoryEntry + insertAfterId + 1) = value;
 
+			return true;
+
 		}
 
 		void clear() noexcept
 		{
 			this->localLen = 0;
-			this->allocator.deallocate();
+			this->allocator->deallocate();
 		}
 
 	private:
-		Alloc allocator;
+		Alloc* allocator{ nullptr };
 		T* memoryEntry{ nullptr };
 		size_t localLen{ 0 };
 	};

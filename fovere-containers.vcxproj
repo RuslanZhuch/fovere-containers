@@ -20,8 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Accumulate.ixx" />
-    <ClCompile Include="Adapter.ixx" />
+    <ClCompile Include="ArrayDynamicCompact.ixx" />
+    <ClCompile Include="ArrayStatic.ixx" />
     <ClCompile Include="ArrayStaticStable.ixx" />
+    <ClCompile Include="ArrayUniversal.ixx" />
     <ClCompile Include="Core.ixx" />
     <ClCompile Include="Count.ixx" />
     <ClCompile Include="Contain.ixx" />
@@ -34,7 +36,7 @@
     <ClCompile Include="IteratorMonodirectional.ixx" />
     <ClCompile Include="IteratorsCore.ixx" />
     <ClCompile Include="Len.ixx" />
-    <ClCompile Include="ArrayStatic.ixx" />
+    <ClCompile Include="MapSimple.ixx" />
     <ClCompile Include="Utils.ixx" />
   </ItemGroup>
   <ItemGroup>
@@ -68,6 +70,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <EnableASAN>false</EnableASAN>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
