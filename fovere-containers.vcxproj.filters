@@ -14,6 +14,9 @@
     <Filter Include="lib\Iterators">
       <UniqueIdentifier>{13fc77d7-50a8-4948-bc08-8d528444e41e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="lib\Adapters">
+      <UniqueIdentifier>{e3636362-214f-437d-a85d-a86f273e54d5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Len.ixx">
@@ -58,9 +61,6 @@
     <ClCompile Include="IteratorArrayStable.ixx">
       <Filter>lib\Iterators</Filter>
     </ClCompile>
-    <ClCompile Include="ArrayStatic.ixx">
-      <Filter>lib\Containers</Filter>
-    </ClCompile>
     <ClCompile Include="ArrayDynamicCompact.ixx">
       <Filter>lib\Containers</Filter>
     </ClCompile>
@@ -72,6 +72,9 @@
     </ClCompile>
     <ClCompile Include="IteratorMapSimple.ixx">
       <Filter>lib\Iterators</Filter>
+    </ClCompile>
+    <ClCompile Include="AdapterStatic.ixx">
+      <Filter>lib\Adapters</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

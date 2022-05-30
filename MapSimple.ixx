@@ -19,6 +19,8 @@ export namespace fovere::Map
 	{
 		using TIter = Map::Iterator<Iterators::Monodir<TKey>, Iterators::Monodir<TVal>>;
 	public:
+		using TAlloc = typename Alloc;
+	public:
 		Simple(Alloc* alloc) 
 			: 
 			allocator(alloc),

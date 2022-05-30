@@ -2,52 +2,42 @@
 
 //import AlgLinear;
 import hfog.Alloc;
+import hfog.Sources.Local;
+import hfog.Sources.Ext;
 
 import fovere.Array.DynamicCompact;
 
 using namespace hfog::MemoryUtils::Literals;
 
-
 template<mem_t alignment>
-using allocStackExt_t = hfog::Alloc::StackExt<alignment, hfog::GarbageWriter::ByteWriter<SET_BYTES, CLEAR_BYTES>>;
+using allocStackExt_t = hfog::Algorithms::Stack<hfog::Sources::External<>, alignment>;
 
 template<mem_t alignment, mem_t bytes>
-using allocStack_t = hfog::Alloc::Stack<alignment, bytes, hfog::GarbageWriter::ByteWriter<SET_BYTES, CLEAR_BYTES>>;
+using allocStack_t = hfog::Algorithms::Stack<hfog::Sources::Local<bytes>, alignment>;
 
-template<mem_t alignment, mem_t maxAllocBytes, size_t numOfChunks>
-using allocIslandsExt_t = hfog::Alloc::IslandsExt<alignment, maxAllocBytes, numOfChunks, hfog::GarbageWriter::ByteWriter<SET_BYTES, CLEAR_BYTES>>;
-
-template<mem_t alignment, mem_t maxAllocBytes, size_t numOfChunks>
-using allocIslands_t = hfog::Alloc::Islands<alignment, maxAllocBytes, numOfChunks, hfog::GarbageWriter::ByteWriter<SET_BYTES, CLEAR_BYTES>>;
-
-
-template<mem_t alignment, size_t numOfChunks>
-using allocPoolExt_t = hfog::Alloc::PoolExt<alignment, numOfChunks, hfog::GarbageWriter::ByteWriter<SET_BYTES, CLEAR_BYTES>>;
-
-template<mem_t alignment, size_t numOfChunks>
-using allocPool_t = hfog::Alloc::Pool<alignment, numOfChunks, hfog::GarbageWriter::ByteWriter<SET_BYTES, CLEAR_BYTES>>;
-
-
-template <typename Alloc, typename Func>
+template <mem_t numOfBytes, typename Func>
 void testWithLocalBuffer(Func func)
 {
 
+	using Alloc = allocStack_t<sizeof(int), numOfBytes>;
 	Alloc alloc;
 
-	fovere::Array::DynamicCompact<Alloc, int> arr(&alloc);
+	fovere::Array::DynamicCompact<int, hfog::Sources::Local<numOfBytes>> arr(&alloc);
 
 	func(arr);
 
 }
 
-template <typename Alloc, size_t numOfBytes, typename Func>
+template <mem_t numOfBytes, typename Func>
 void testWithExternalBuffer(Func func)
 {
 
 	byte_t extBuffer[numOfBytes];
+
+	using Alloc = allocStackExt_t<sizeof(int)>;
 	Alloc alloc(hfog::MemoryBlock(extBuffer, sizeof(extBuffer)));
 
-	fovere::Array::DynamicCompact<Alloc, int> arr(&alloc);
+	fovere::Array::DynamicCompact<int, hfog::Sources::External<>> arr(&alloc);
 
 	func(arr);
 
@@ -57,11 +47,8 @@ template <mem_t bytes, size_t numOfExtBytes, typename Func>
 void testFull(Func func)
 {
 
-	constexpr auto minAlignment{ 4_B };
-
-	testWithLocalBuffer<allocStack_t<minAlignment, bytes>>(func);
-
-	testWithExternalBuffer<allocStackExt_t<minAlignment>, numOfExtBytes>(func);
+	testWithLocalBuffer<bytes>(func);
+	testWithExternalBuffer<numOfExtBytes>(func);
 
 }
 

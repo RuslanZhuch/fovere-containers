@@ -1,20 +1,27 @@
 module;
 #include <cassert>
+#include <memory>
 
 export module fovere.Array.DynamicCompact;
 export import fovere.Utils;
 
 import hfog.Core;
+import hfog.Algorithms.Stack;
+import hfog.Sources.Common;
 
 import fovere.Iterators.Monodirectional;
 
 export namespace fovere::Array
 {
 
-	template<hfog::CtAllocator Alloc, typename T>
+	template<typename T, hfog::Sources::CtSource Source>
 	class DynamicCompact
 	{
 		using TIter = fovere::Iterators::Monodir<T>;
+		using Alloc = hfog::Algorithms::Stack<Source, sizeof(T), hfog::MemoryUtils::Align<sizeof(T)>>;
+	public:
+		using TVal = typename T;
+		using TAlloc = typename Alloc;
 	public:
 		DynamicCompact() = delete;
 
@@ -53,14 +60,13 @@ export namespace fovere::Array
 		{
 
 			assert(id < this->localLen);
+			const auto copyBegin{ id + 1 };
+			const auto elementsToCopy{ this->localLen - 1 - id };
+			const auto elementsToCopyInBytes{ elementsToCopy * sizeof(T) };
+
 			if (id != this->localLen - 1)
 			{
-				auto currId{ id };
-				while (currId < this->localLen - 1)
-				{
-					*(this->memoryEntry + currId) = *(this->memoryEntry + currId + 1);
-					++currId;
-				}
+				std::memcpy(this->memoryEntry + id, this->memoryEntry + copyBegin, elementsToCopyInBytes);
 			}
 
 			--this->localLen;
@@ -77,13 +83,13 @@ export namespace fovere::Array
 			assert(endId <= this->localLen);
 			assert(beginId < endId);
 
-			auto currSrcId{ endId };
-			auto currTargetId{ beginId };
-			while (currSrcId < this->localLen)
+			const auto copyBegin{ endId };
+			const auto elementsToCopy{ this->localLen - endId };
+			const auto elementsToCopyInBytes{ elementsToCopy * sizeof(T) };
+
+			if (copyBegin < this->localLen)
 			{
-				*(this->memoryEntry + currTargetId) = *(this->memoryEntry + currSrcId);
-				++currTargetId;
-				++currSrcId;
+				memcpy(this->memoryEntry + beginId, this->memoryEntry + copyBegin, elementsToCopyInBytes);
 			}
 
 			const auto elementsToDelete{ endId - beginId };
@@ -105,12 +111,10 @@ export namespace fovere::Array
 			if (memBlock.ptr == nullptr)
 				return false;
 
-			auto currId{ this->localLen++ };
-			while (currId > insertAfterId)
-			{
-				*(this->memoryEntry + currId) = *(this->memoryEntry + currId - 1);
-				--currId;
-			}
+			this->localLen++;
+			const auto elementsToCopy{ this->localLen - insertAfterId - 2 };
+			const auto elementsToCopyInBytes{ elementsToCopy * sizeof(T) };
+			std::memcpy(this->memoryEntry + insertAfterId + 2, this->memoryEntry + insertAfterId + 1, elementsToCopyInBytes);
 
 			*(this->memoryEntry + insertAfterId + 1) = value;
 

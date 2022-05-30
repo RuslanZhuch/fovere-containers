@@ -21,7 +21,7 @@
   <ItemGroup>
     <ClCompile Include="Accumulate.ixx" />
     <ClCompile Include="ArrayDynamicCompact.ixx" />
-    <ClCompile Include="ArrayStatic.ixx" />
+    <ClCompile Include="AdapterStatic.ixx" />
     <ClCompile Include="ArrayUniversal.ixx" />
     <ClCompile Include="Core.ixx" />
     <ClCompile Include="Count.ixx" />

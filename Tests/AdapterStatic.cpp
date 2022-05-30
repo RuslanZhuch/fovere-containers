@@ -1,22 +1,52 @@
 #include "pch.h"
 
-//import AlgLinear;
 import hfog.Algorithms.Stack;
 import hfog.Algorithms.Unified;
 import hfog.Sources.Local;
+import hfog.Alloc;
 
-import fovere.Array.Static;
+import fovere.Adapter.Static;
+
+import fovere.Array.DynamicCompact;
+import fovere.Array.Universal;
 
 using namespace hfog::MemoryUtils::Literals;
 
 static constexpr auto NUM_OF_ELEMENTS{ 4 };
 using type_t = int;
-using arr_t = fovere::Array::Static<NUM_OF_ELEMENTS, type_t>;
 
-TEST(ArrayStatic, tsAppend)
+template <typename Container, typename Func>
+void testWithLocalBuffer(Func func)
 {
 
-	arr_t arr;
+	fovere::Adapter::Static<Container> arr;
+
+	func(std::move(arr));
+
+}
+
+template <mem_t maxAllocBytes, size_t numOfChunks, bool universal = true, typename Func>
+void testFull(Func func)
+{
+
+	constexpr auto minAlignment{ sizeof(type_t) };
+	constexpr auto universalMultiplyer{ 8 };
+
+	testWithLocalBuffer<fovere::Array::DynamicCompact<type_t, hfog::Sources::Local<maxAllocBytes>>>(func);
+// 
+//	testWithLocalBuffer<fovere::Array::Universal<hfog::Alloc::Pool<minAlignment, numOfChunks * 2>, type_t>, maxAllocBytes * 2>(func);
+	
+	testWithLocalBuffer<fovere::Array::Universal<hfog::Alloc::Islands<minAlignment, maxAllocBytes * universalMultiplyer, numOfChunks>, 
+		type_t>>(func);
+
+	testWithLocalBuffer<fovere::Array::Universal<hfog::Alloc::Unified<minAlignment * universalMultiplyer, 
+		maxAllocBytes * universalMultiplyer>, type_t>>(func);
+
+}
+
+void tsImplAppend(auto&& arr)
+{
+
 	EXPECT_EQ(arr.getLen(), size_t(0));
 
 	for (size_t itersLeft{ 2 }; itersLeft > 0; --itersLeft)
@@ -45,10 +75,16 @@ TEST(ArrayStatic, tsAppend)
 
 }
 
-TEST(ArrayStatic, tsRemove)
+TEST(AdapterStatic, tsAppend)
 {
 
-	arr_t arr;
+	testFull<NUM_OF_ELEMENTS * sizeof(type_t), NUM_OF_ELEMENTS>([](auto&& arr) {tsImplAppend(arr); });
+
+}
+
+void tsImplRemove(auto&& arr)
+{
+
 	EXPECT_EQ(arr.getLen(), size_t(0));
 
 	for (size_t itersLeft{ 2 }; itersLeft > 0; --itersLeft)
@@ -92,10 +128,16 @@ TEST(ArrayStatic, tsRemove)
 
 }
 
-TEST(ArrayStatic, tsRemove2)
+TEST(AdapterStatic, tsRemove)
 {
 
-	arr_t arr;
+	testFull<NUM_OF_ELEMENTS * sizeof(type_t), NUM_OF_ELEMENTS>([](auto&& arr) {tsImplRemove(arr); });
+
+}
+
+void tsImplRemove2(auto&& arr)
+{
+
 	EXPECT_EQ(arr.getLen(), size_t(0));
 
 	for (size_t itersLeft{ 2 }; itersLeft > 0; --itersLeft)
@@ -139,10 +181,15 @@ TEST(ArrayStatic, tsRemove2)
 
 }
 
-TEST(ArrayStatic, tsRemoveRange)
+TEST(AdapterStatic, tsRemove2)
 {
 
-	fovere::Array::Static<6, type_t> arr;
+	testFull<NUM_OF_ELEMENTS * sizeof(type_t), NUM_OF_ELEMENTS>([](auto&& arr) {tsImplRemove2(arr); });
+
+}
+
+void tsImplRemoveRange(auto&& arr)
+{
 
 	for (size_t itersLeft{ 2 }; itersLeft > 0; --itersLeft)
 	{
@@ -169,12 +216,21 @@ TEST(ArrayStatic, tsRemoveRange)
 		EXPECT_EQ(arr.getLen(), size_t(0));
 
 	}
+
 }
 
-TEST(ArrayStatic, tsInsertion)
+
+TEST(AdapterStatic, tsRemoveRange)
 {
 
-	fovere::Array::Static<6, type_t> arr;
+	constexpr auto EXTRA_NUM_OF_ELEMENTS{ 6 };
+
+	testFull<EXTRA_NUM_OF_ELEMENTS * sizeof(type_t), EXTRA_NUM_OF_ELEMENTS>([](auto&& arr) {tsImplRemoveRange(arr); });
+
+}
+
+void tsImplInsertion(auto&& arr)
+{
 
 	for (size_t itersLeft{ 2 }; itersLeft > 0; --itersLeft)
 	{
@@ -210,10 +266,18 @@ TEST(ArrayStatic, tsInsertion)
 
 }
 
-TEST(ArrayStatic, tsForEach)
+TEST(AdapterStatic, tsInsertion)
 {
 
-	fovere::Array::Static<4, type_t> arr;
+	constexpr auto EXTRA_NUM_OF_ELEMENTS{ 6 };
+
+	testFull<EXTRA_NUM_OF_ELEMENTS * sizeof(type_t), EXTRA_NUM_OF_ELEMENTS>([](auto&& arr) {tsImplInsertion(arr); });
+
+}
+
+void tsImplForEach(auto&& arr)
+{
+
 	[[maybe_unused]] const auto a1{ arr.append(1) };
 	[[maybe_unused]] const auto a2{ arr.append(2) };
 	[[maybe_unused]] const auto a3{ arr.append(3) };
@@ -249,10 +313,17 @@ TEST(ArrayStatic, tsForEach)
 
 	arr.remove(0);
 	int numOfIters = 0;
-	for ([[maybe_unused]] auto el: arr)
+	for ([[maybe_unused]] auto el : arr)
 	{
 		++numOfIters;
 	}
 	EXPECT_EQ(numOfIters, 0);
+
+}
+
+TEST(AdapterStatic, tsForEach)
+{
+
+	testFull<NUM_OF_ELEMENTS * sizeof(type_t), NUM_OF_ELEMENTS>([](auto&& arr) {tsImplForEach(arr); });
 
 }

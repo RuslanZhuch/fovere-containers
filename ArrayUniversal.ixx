@@ -16,6 +16,9 @@ export namespace fovere::Array
 	class Universal
 	{
 	public:
+		using TVal = typename T;
+		using TAlloc = typename Alloc;
+	public:
 		Universal(Alloc* alloc)
 			:allocator(alloc)
 		{

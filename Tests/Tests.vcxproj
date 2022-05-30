@@ -39,12 +39,13 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
+    <ClInclude Include="MapTestCases.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ArrayDynamicCompact.cpp" />
-    <ClCompile Include="ArrayStatic.cpp" />
     <ClCompile Include="ArrayFixed.cpp" />
+    <ClCompile Include="AdapterStatic.cpp" />
     <ClCompile Include="ArrayUniversal.cpp" />
     <ClCompile Include="MapSimple.cpp" />
     <ClCompile Include="Protection.cpp" />
@@ -55,6 +56,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="StaticMap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\fovere-containers.vcxproj">
@@ -106,7 +108,6 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <EnableModules>true</EnableModules>
       <AssemblerOutput>AssemblyAndSourceCode</AssemblerOutput>
-      <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -147,13 +148,13 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <EnableModules>true</EnableModules>
       <AssemblerOutput>AssemblyAndSourceCode</AssemblerOutput>
-      <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

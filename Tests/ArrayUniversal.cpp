@@ -8,18 +8,23 @@ import fovere.Array.Universal;
 using namespace hfog::MemoryUtils::Literals;
 
 
+template<mem_t alignment, size_t numOfChunks>
+using allocPoolExt_t = hfog::Alloc::PoolExt<alignment, numOfChunks, hfog::GarbageWriter::ByteWriter<SET_BYTES, CLEAR_BYTES>>;
+
+template<mem_t alignment, size_t numOfChunks>
+using allocPool_t = hfog::Alloc::Pool<alignment, numOfChunks, hfog::GarbageWriter::ByteWriter<SET_BYTES, CLEAR_BYTES>>;
+
 template<mem_t alignment, mem_t maxAllocBytes, size_t numOfChunks>
 using allocIslandsExt_t = hfog::Alloc::IslandsExt<alignment, maxAllocBytes, numOfChunks, hfog::GarbageWriter::ByteWriter<SET_BYTES, CLEAR_BYTES>>;
 
 template<mem_t alignment, mem_t maxAllocBytes, size_t numOfChunks>
 using allocIslands_t = hfog::Alloc::Islands<alignment, maxAllocBytes, numOfChunks, hfog::GarbageWriter::ByteWriter<SET_BYTES, CLEAR_BYTES>>;
 
+template<mem_t alignment, mem_t maxAllocBytes>
+using allocUnifiedExt_t = hfog::Alloc::UnifiedExt<alignment, maxAllocBytes,hfog::GarbageWriter::ByteWriter<SET_BYTES, CLEAR_BYTES>>;
 
-template<mem_t alignment, size_t numOfChunks>
-using allocPoolExt_t = hfog::Alloc::PoolExt<alignment, numOfChunks, hfog::GarbageWriter::ByteWriter<SET_BYTES, CLEAR_BYTES>>;
-
-template<mem_t alignment, size_t numOfChunks>
-using allocPool_t = hfog::Alloc::Pool<alignment, numOfChunks, hfog::GarbageWriter::ByteWriter<SET_BYTES, CLEAR_BYTES>>;
+template<mem_t alignment, mem_t maxAllocBytes>
+using allocUnified_t = hfog::Alloc::Unified<alignment, maxAllocBytes,hfog::GarbageWriter::ByteWriter<SET_BYTES, CLEAR_BYTES>>;
 
 
 template <typename Alloc, typename Func>
@@ -47,17 +52,23 @@ void testWithExternalBuffer(Func func)
 
 }
 
-template <mem_t maxAllocBytes, size_t numOfChunks, size_t numOfExtBytes, typename Func>
+template <mem_t maxAllocBytes, size_t numOfChunks, size_t numOfExtBytes, bool universal = true, typename Func>
 void testFull(Func func)
 {
 
 	constexpr auto minAlignment{ 4_B };
+	constexpr auto universalMultiplyer{ 8 };
 
-	testWithLocalBuffer<allocIslands_t<minAlignment, maxAllocBytes, numOfChunks>>(func);
 	testWithLocalBuffer<allocPool_t<maxAllocBytes, numOfChunks>>(func);
+	testWithLocalBuffer<allocIslands_t<minAlignment, maxAllocBytes, numOfChunks>>(func);
+	if constexpr (universal)
+		testWithLocalBuffer<allocUnified_t<minAlignment * universalMultiplyer, maxAllocBytes * universalMultiplyer>>(func);
 
 	testWithExternalBuffer<allocIslandsExt_t<minAlignment, maxAllocBytes, numOfChunks>, numOfExtBytes>(func);
 	testWithExternalBuffer<allocPoolExt_t<maxAllocBytes, numOfChunks>, numOfExtBytes>(func);
+	if constexpr (universal)
+		testWithExternalBuffer<allocUnifiedExt_t<minAlignment * universalMultiplyer, maxAllocBytes * universalMultiplyer>, 
+		numOfExtBytes * universalMultiplyer>(func);
 
 }
 
@@ -270,7 +281,7 @@ void tsImplLimits(auto arr)
 TEST(ArrayUniversal, tsLimits)
 {
 
-	testFull<8_B, 2, 64_B>([](auto arr) {tsImplLimits(arr); });
+	testFull<8_B, 2, 64_B, false>([](auto arr) {tsImplLimits(arr); });
 
 }
 
