@@ -8,6 +8,8 @@ import fovere.Utils;
 import hfog.Core;
 
 import fovere.Array.Universal;
+import fovere.Iterators.Monodirectional;
+import :Iterator;
 
 export namespace fovere::Map
 {
@@ -15,7 +17,7 @@ export namespace fovere::Map
 	template <typename TKey, typename TVal, hfog::CtAllocator Alloc>
 	class Simple
 	{
-
+		using TIter = Map::Iterator<Iterators::Monodir<TKey>, Iterators::Monodir<TVal>>;
 	public:
 		Simple(Alloc* alloc) 
 			: 
@@ -101,6 +103,26 @@ export namespace fovere::Map
 		[[nodiscard]] constexpr auto getLen() const noexcept
 		{
 			return this->localLen;
+		}
+
+		[[nodiscard]] constexpr const auto& getKeys() const noexcept
+		{
+			return this->keys;
+		}
+
+		[[nodiscard]] constexpr const auto& getItems() const noexcept
+		{
+			return this->vals;
+		}
+
+		[[nodiscard]] constexpr auto begin() noexcept
+		{
+			return TIter(this->keys.begin(), this->vals.begin());
+		}
+
+		[[nodiscard]] constexpr auto end() noexcept
+		{
+			return TIter(this->keys.end(), this->vals.end());
 		}
 
 	private:

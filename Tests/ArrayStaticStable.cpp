@@ -1,6 +1,6 @@
 #include "pch.h"
 
-import hfog.Sources.Stack;
+import hfog.Sources.Local;
 import fovere.Array.StaticStable;
 
 using namespace hfog::MemoryUtils::Literals;
@@ -8,7 +8,7 @@ using namespace hfog::MemoryUtils::Literals;
 TEST(ArrayStaticStable, tsCreation)
 {
 
-	using source_t = hfog::Sources::Stack<16_B, hfog::GarbageWriter::Default>;
+	using source_t = hfog::Sources::Local<16_B, hfog::GarbageWriter::Default>;
 
 	{
 
@@ -36,7 +36,7 @@ TEST(ArrayStaticStable, tsCreation)
 TEST(ArrayStaticStable, tsClear)
 {
 
-	using source_t = hfog::Sources::Stack<16_B, hfog::GarbageWriter::Default>;
+	using source_t = hfog::Sources::Local<16_B, hfog::GarbageWriter::Default>;
 
 	static constexpr size_t numOfElements{ 4 };
 	fovere::Array::StaticStable<source_t, int, numOfElements> arr;
@@ -57,7 +57,7 @@ TEST(ArrayStaticStable, tsClear)
 TEST(ArrayStaticStable, tsRemoving)
 {
 
-	using source_t = hfog::Sources::Stack<16_B, hfog::GarbageWriter::Default>;
+	using source_t = hfog::Sources::Local<16_B, hfog::GarbageWriter::Default>;
 
 	static constexpr size_t numOfElements{ 4 };
 	fovere::Array::StaticStable<source_t, int, numOfElements> arr;
@@ -91,7 +91,7 @@ TEST(ArrayStaticStable, tsRemoving)
 TEST(ArrayStaticStable, tsRemovingAndAppending)
 {
 
-	using source_t = hfog::Sources::Stack<16_B, hfog::GarbageWriter::Default>;
+	using source_t = hfog::Sources::Local<16_B, hfog::GarbageWriter::Default>;
 
 	static constexpr size_t numOfElements{ 4 };
 	fovere::Array::StaticStable<source_t, int, numOfElements> arr;
@@ -136,7 +136,7 @@ TEST(ArrayStaticStable, tsRemovingAndAppending)
 TEST(ArrayStaticStable, tsRandomAccess)
 {
 
-	using source_t = hfog::Sources::Stack<16_B, hfog::GarbageWriter::Default>;
+	using source_t = hfog::Sources::Local<16_B, hfog::GarbageWriter::Default>;
 
 	static constexpr size_t numOfElements{ 4 };
 	fovere::Array::StaticStable<source_t, int, numOfElements> arr;
@@ -179,7 +179,7 @@ static void createReversed(auto& arr, size_t numOfElements = 4)
 template <typename T>
 static void tsIterationRead()
 {
-	using source_t = hfog::Sources::Stack<16_B, hfog::GarbageWriter::Default>;
+	using source_t = hfog::Sources::Local<16_B, hfog::GarbageWriter::Default>;
 
 	static constexpr size_t numOfElements{ 4 };
 	fovere::Array::StaticStable<source_t, T, numOfElements> arr;
@@ -200,24 +200,20 @@ TEST(ArrayStaticStable, tsIteration)
 	tsIterationRead<int>();
 	tsIterationRead<const int>();
 
+	using source_t = hfog::Sources::Local<16_B, hfog::GarbageWriter::Default>;
+
+	static constexpr size_t numOfElements{ 4 };
+	fovere::Array::StaticStable<source_t, int, numOfElements> arr;
+	createReversed(arr);
+
+	for (size_t id{ 0 }; auto& el : arr)
 	{
+		el = 10 + ++id;
+	}	
 
-		using source_t = hfog::Sources::Stack<16_B, hfog::GarbageWriter::Default>;
-
-		static constexpr size_t numOfElements{ 4 };
-		fovere::Array::StaticStable<source_t, int, numOfElements> arr;
-		createReversed(arr);
-
-		for (size_t id{ 0 }; auto& el : arr)
-		{
-			el = 10 + ++id;
-		}	
-
-		for (size_t id{ 0 }; const auto el : arr)
-		{
-			EXPECT_EQ(el, static_cast<int>(10 + ++id));
-		}
-
+	for (size_t id{ 0 }; const auto el : arr)
+	{
+		EXPECT_EQ(el, static_cast<int>(10 + ++id));
 	}
 
 }
@@ -225,7 +221,7 @@ TEST(ArrayStaticStable, tsIteration)
 TEST(ArrayStaticStable, tsPrecache)
 {
 
-	using source_t = hfog::Sources::Stack<20_B, hfog::GarbageWriter::Default>;
+	using source_t = hfog::Sources::Local<20_B, hfog::GarbageWriter::Default>;
 
 	{
 		static constexpr size_t numOfElements{ 4 };

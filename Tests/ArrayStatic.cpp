@@ -3,86 +3,20 @@
 //import AlgLinear;
 import hfog.Algorithms.Stack;
 import hfog.Algorithms.Unified;
-import hfog.Sources.Stack;
+import hfog.Sources.Local;
 
 import fovere.Array.Static;
 
 using namespace hfog::MemoryUtils::Literals;
 
-//TEST(ArrayStatic, tsLinearAdapter)
-//{
-//
-//	using source_t = hfog::Sources::Stack<12_B, hfog::GarbageWriter::ByteWriter<0xFA, 0xAF>>;
-//	using allocator_t = hfog::Algorithms::Linear<source_t, 4_B>;
-//
-//	fovere::Array::Static<allocator_t, int> arr;
-//	EXPECT_EQ(arr.getLen(), 0);
-//
-//	for (size_t itersLeft{ 2 }; itersLeft > 0; --itersLeft)
-//	{
-//		arr.append(1);
-//		EXPECT_EQ(arr.getLen(), 1);
-//		EXPECT_EQ(arr[0], 1);
-//
-//		arr.append(2);
-//		EXPECT_EQ(arr.getLen(), 2);
-//		EXPECT_EQ(arr[1], 2);
-//
-//		arr.append(3);
-//		EXPECT_EQ(arr.getLen(), 3);
-//		EXPECT_EQ(arr[2], 3);
-//
-//		arr.clear();
-//		EXPECT_EQ(arr.getLen(), 0);
-//	}
-//
-//	for (size_t itersLeft{ 2 }; itersLeft > 0; --itersLeft)
-//	{
-//
-//		arr.append(1);
-//		EXPECT_EQ(arr.getLen(), 1);
-//		EXPECT_EQ(arr[0], 1);
-//
-//		arr.append(2);
-//		EXPECT_EQ(arr.getLen(), 2);
-//		EXPECT_EQ(arr[1], 2);
-//
-//		arr.append(3);
-//		EXPECT_EQ(arr.getLen(), 3);
-//		EXPECT_EQ(arr[2], 3);
-//
-//		arr.remove(0);
-//		EXPECT_EQ(arr.getLen(), 3);
-//		arr.remove(1);
-//		EXPECT_EQ(arr.getLen(), 3);
-//
-//		arr.remove(2);
-//		EXPECT_EQ(arr.getLen(), 2);
-//		EXPECT_EQ(arr[0], 1);
-//		EXPECT_EQ(arr[1], 2);
-//
-//		arr.remove(0);
-//		EXPECT_EQ(arr.getLen(), 2);
-//		
-//		arr.remove(1);
-//		EXPECT_EQ(arr.getLen(), 1);
-//		EXPECT_EQ(arr[0], 1);
-//
-//		arr.remove(1);
-//		EXPECT_EQ(arr.getLen(), 1);
-//		EXPECT_EQ(arr[0], 1);
-//
-//		arr.remove(0);
-//		EXPECT_EQ(arr.getLen(), 0);
-//
-//	}
-//
-//}
+static constexpr auto NUM_OF_ELEMENTS{ 3 };
+using type_t = int;
+using arr_t = fovere::Array::Static<NUM_OF_ELEMENTS, type_t>;
 
-TEST(ArrayStatic, tsStackAdapter)
+TEST(ArrayStatic, tsAppend)
 {
 
-	fovere::Array::Static<3, int> arr;
+	arr_t arr;
 	EXPECT_EQ(arr.getLen(), 0);
 
 	for (size_t itersLeft{ 2 }; itersLeft > 0; --itersLeft)
@@ -105,10 +39,18 @@ TEST(ArrayStatic, tsStackAdapter)
 
 	}
 
+}
+
+TEST(ArrayStatic, tsRemove)
+{
+
+	arr_t arr;
+	EXPECT_EQ(arr.getLen(), 0);
+
 	for (size_t itersLeft{ 2 }; itersLeft > 0; --itersLeft)
 	{
 
-		EXPECT_EQ(arr.append(1), 0);;
+		EXPECT_EQ(arr.append(1), 0);
 		EXPECT_EQ(arr.getLen(), 1);
 		EXPECT_EQ(arr[0], 1);
 
@@ -133,6 +75,14 @@ TEST(ArrayStatic, tsStackAdapter)
 		EXPECT_EQ(arr.getLen(), 0);
 
 	}
+
+}
+
+TEST(ArrayStatic, tsRemove2)
+{
+
+	arr_t arr;
+	EXPECT_EQ(arr.getLen(), 0);
 
 	for (size_t itersLeft{ 2 }; itersLeft > 0; --itersLeft)
 	{
@@ -165,10 +115,10 @@ TEST(ArrayStatic, tsStackAdapter)
 
 }
 
-TEST(ArrayStatic, tsStackAdapterRemoveRange)
+TEST(ArrayStatic, tsRemoveRange)
 {
 
-	fovere::Array::Static<6, int> arr;
+	fovere::Array::Static<6, type_t> arr;
 
 	for (size_t itersLeft{ 2 }; itersLeft > 0; --itersLeft)
 	{
@@ -197,10 +147,10 @@ TEST(ArrayStatic, tsStackAdapterRemoveRange)
 	}
 }
 
-TEST(ArrayStatic, tsStackAdapterInsertion)
+TEST(ArrayStatic, tsInsertion)
 {
 
-	fovere::Array::Static<6, int> arr;
+	fovere::Array::Static<6, type_t> arr;
 
 	for (size_t itersLeft{ 2 }; itersLeft > 0; --itersLeft)
 	{
@@ -233,5 +183,52 @@ TEST(ArrayStatic, tsStackAdapterInsertion)
 		}
 
 	}
+
+}
+
+TEST(ArrayStatic, tsForEach)
+{
+
+	fovere::Array::Static<4, type_t> arr;
+	arr.append(1);
+	arr.append(2);
+	arr.append(3);
+	arr.append(4);
+
+	int expected{ 1 };
+	for (auto el : arr)
+	{
+		EXPECT_EQ(el, expected++);
+	}
+	EXPECT_EQ(expected, 5);
+
+	arr.remove(2);
+	for (size_t id{ 0 }; auto el: arr)
+	{
+		static int expectedData[]{ 1, 2, 4 };
+		EXPECT_EQ(el, expectedData[id++]);
+	}
+
+	arr.remove(0);
+	for (size_t id{ 0 }; auto el: arr)
+	{
+		static int expectedData[]{ 2, 4 };
+		EXPECT_EQ(el, expectedData[id++]);
+	}
+
+	arr.remove(1);
+	for (size_t id{ 0 }; auto el: arr)
+	{
+		static int expectedData[]{ 2 };
+		EXPECT_EQ(el, expectedData[id++]);
+	}
+
+	arr.remove(0);
+	int numOfIters = 0;
+	for (size_t id{ 0 }; auto el: arr)
+	{
+		++numOfIters;
+	}
+	EXPECT_EQ(numOfIters, 0);
 
 }

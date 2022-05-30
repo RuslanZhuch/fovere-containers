@@ -48,6 +48,7 @@
     <ClCompile Include="ArrayStaticStable.cpp" />
     <ClCompile Include="ArrayUniversal.cpp" />
     <ClCompile Include="MapSimple.cpp" />
+    <ClCompile Include="Protection.cpp" />
     <ClCompile Include="RangeBasedLoopIterator.cpp" />
     <ClCompile Include="TypeContinuous.cpp" />
     <ClCompile Include="pch.cpp">

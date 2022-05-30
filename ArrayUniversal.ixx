@@ -60,11 +60,11 @@ export namespace fovere::Array
 			assert(id < this->localLen);
 			if (id != this->localLen - 1)
 			{
-				auto currId{ this->localLen - 1 };
-				while (currId > id)
+				auto currId{ id };
+				while (currId < this->localLen - 1)
 				{
-					*(this->memoryEntry + currId - 1) = *(this->memoryEntry + currId);
-					--currId;
+					*(this->memoryEntry + currId) = *(this->memoryEntry + currId + 1);
+					++currId;
 				}
 			}
 

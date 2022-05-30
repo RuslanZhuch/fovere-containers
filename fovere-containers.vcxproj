@@ -34,6 +34,7 @@
     <ClCompile Include="Insert.ixx" />
     <ClCompile Include="IteratorArrayStable.ixx" />
     <ClCompile Include="IteratorMonodirectional.ixx" />
+    <ClCompile Include="IteratorMapSimple.ixx" />
     <ClCompile Include="IteratorsCore.ixx" />
     <ClCompile Include="Len.ixx" />
     <ClCompile Include="MapSimple.ixx" />

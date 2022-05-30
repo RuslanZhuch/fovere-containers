@@ -5,12 +5,12 @@ export module fovere.Array.Static;
 import fovere.Array.DynamicCompact;
 
 import hfog.Algorithms.Stack;
-import hfog.Sources.Stack;
+import hfog.Sources.Local;
 
 import hfog.Core;
 
 template<size_t capacity, typename T>
-using source_t = hfog::Sources::Stack<capacity * sizeof(T)>;
+using source_t = hfog::Sources::Local<capacity * sizeof(T)>;
 
 template<size_t capacity, typename T>
 using allocator_t = hfog::Algorithms::Stack<source_t<capacity, T>, sizeof(T), hfog::MemoryUtils::Align<sizeof(T)>>;

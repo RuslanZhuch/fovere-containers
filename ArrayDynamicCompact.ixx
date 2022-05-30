@@ -6,12 +6,15 @@ export import fovere.Utils;
 
 import hfog.Core;
 
+import fovere.Iterators.Monodirectional;
+
 export namespace fovere::Array
 {
 
 	template<hfog::CtAllocator Alloc, typename T>
 	class DynamicCompact
 	{
+		using TIter = fovere::Iterators::Monodir<T>;
 	public:
 		DynamicCompact(Alloc* alloc)
 			:allocator(alloc)
@@ -50,11 +53,11 @@ export namespace fovere::Array
 			assert(id < this->localLen);
 			if (id != this->localLen - 1)
 			{
-				auto currId{ this->localLen - 1 };
-				while (currId > id)
+				auto currId{ id };
+				while (currId < this->localLen - 1)
 				{
-					*(this->memoryEntry + currId - 1) = *(this->memoryEntry + currId);
-					--currId;
+					*(this->memoryEntry + currId) = *(this->memoryEntry + currId + 1);
+					++currId;
 				}
 			}
 
@@ -117,6 +120,16 @@ export namespace fovere::Array
 		{
 			this->localLen = 0;
 			this->allocator->deallocate();
+		}
+
+		[[nodiscard]] constexpr auto begin() noexcept
+		{
+			return TIter(memoryEntry);
+		}
+
+		[[nodiscard]] constexpr auto end() noexcept
+		{
+			return TIter(memoryEntry + this->localLen);
 		}
 
 	private:
