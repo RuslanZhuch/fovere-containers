@@ -16,6 +16,8 @@ export namespace fovere::Array
 	{
 		using TIter = fovere::Iterators::Monodir<T>;
 	public:
+		DynamicCompact() = delete;
+
 		DynamicCompact(Alloc* alloc)
 			:allocator(alloc)
 		{}
@@ -133,9 +135,9 @@ export namespace fovere::Array
 		}
 
 	private:
-		Alloc* allocator{ nullptr };
-		T* memoryEntry{ nullptr };
 		size_t localLen{ 0 };
+		T* memoryEntry{ nullptr };
+		Alloc* allocator{ nullptr };
 	};
 
 };

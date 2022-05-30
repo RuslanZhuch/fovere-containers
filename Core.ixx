@@ -13,7 +13,6 @@ export namespace fovere::Core
 	{
 		requires Iterators::CtSupportRangeBasedIterator<T>;
 		{T::TVal};
-		{t()} -> std::convertible_to<typename T::TVal*>;
 		{ct.getLen()} -> std::convertible_to<size_t>;
 		{ct[std::declval<size_t>()]} -> std::convertible_to<typename T::TVal>;
 		{t[std::declval<size_t>()]} -> std::convertible_to<typename T::TVal&>;

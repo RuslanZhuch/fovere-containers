@@ -16,18 +16,13 @@ export namespace fovere::Array
 		using TIter = fovere::Iterators::Monodir<T>;
 		using TVal = typename T;
 	public:
-		constexpr Fixed() noexcept = default;
+		Fixed() noexcept = default;
 		constexpr Fixed(T initVal) noexcept
 		{
 			for (auto& el : this->data)
 			{
 				el = initVal;
 			}
-		}
-
-		[[nodiscard]] constexpr auto operator()() noexcept
-		{
-			return &this->data[0];
 		}
 
 		[[nodiscard]] constexpr auto getLen() const noexcept

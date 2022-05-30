@@ -9,6 +9,7 @@ namespace fovere::Array
 	public:
 		using TVal = typename T;
 	public:
+		IteratorConst() = delete;
 		IteratorConst(T* p) noexcept
 			:entry(p)
 		{}

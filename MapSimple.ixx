@@ -35,9 +35,9 @@ export namespace fovere::Map
 				return;
 			}
 
-			const auto keyId{ this->keys.append(key) };
+			[[maybe_unused]] const auto keyId{ this->keys.append(key) };
 			assert(keyId != invalidIndex);
-			const auto valId{ this->vals.append(val) };
+			[[maybe_unused]] const auto valId{ this->vals.append(val) };
 			assert(valId != invalidIndex);
 
 			++this->localLen;
@@ -57,7 +57,7 @@ export namespace fovere::Map
 
 			++this->localLen;
 
-			const auto valId{ this->vals.append(TVal()) };
+			[[maybe_unused]] const auto valId{ this->vals.append(TVal()) };
 			assert(valId == keyId);
 
 			return this->vals[keyId];

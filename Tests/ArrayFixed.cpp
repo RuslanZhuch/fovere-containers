@@ -3,7 +3,7 @@
 import fovere.Array.Fixed;
 import fovere.Core;
 
-static constexpr auto NUM_OF_ELEMETNS{ 5 };
+static constexpr size_t NUM_OF_ELEMETNS{ 5 };
 using type_t = int;
 using arr_t = fovere::Array::Fixed<type_t, NUM_OF_ELEMETNS>;
 

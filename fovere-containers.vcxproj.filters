@@ -55,9 +55,6 @@
     <ClCompile Include="Utils.ixx">
       <Filter>lib</Filter>
     </ClCompile>
-    <ClCompile Include="ArrayStaticStable.ixx">
-      <Filter>lib\Containers</Filter>
-    </ClCompile>
     <ClCompile Include="IteratorArrayStable.ixx">
       <Filter>lib\Iterators</Filter>
     </ClCompile>

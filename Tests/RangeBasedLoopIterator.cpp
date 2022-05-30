@@ -68,6 +68,13 @@ class TestContainer
 public:
 	using TIter = typename fovere::Iterators::Monodir<T>;
 public:
+	TestContainer() = default;
+	TestContainer(const TestContainer&) = delete;
+	TestContainer& operator=(const TestContainer&) = delete;
+
+	TestContainer(TestContainer&&) = delete;
+	TestContainer& operator=(TestContainer&&) = delete;
+
 	auto begin() noexcept
 	{
 		return fovere::Iterators::Monodir(&arr[0]);

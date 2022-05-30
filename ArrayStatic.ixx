@@ -25,6 +25,11 @@ export namespace fovere::Array
 	class Static : public base_t<capacity, T>
 	{
 	public:
+		Static(const Static&) = delete;
+		Static& operator=(const Static&) = delete;
+
+		Static(Static&&) = default;
+		Static& operator=(Static&&) = default;
 		Static():
 			base_t<capacity, T>(&staticAlloc)
 		{}

@@ -30,6 +30,17 @@ export namespace fovere::Array
 
 	public:
 
+		StaticStable(const StaticStable&) = delete;
+		StaticStable& operator=(const StaticStable&) = delete;
+
+		StaticStable(StaticStable&&) = default;
+		StaticStable& operator=(StaticStable&&) = default;
+
+		template <typename ... Args>
+		StaticStable(Args ... args) noexcept
+			:allocator(args...)
+		{}
+
 		size_t append(auto&& value) noexcept 
 			requires std::same_as<std::remove_cvref_t<decltype(value)>, std::remove_cv_t<T>>
 		{
@@ -37,7 +48,7 @@ export namespace fovere::Array
 			if (this->localLen == capacity)
 				return fovere::invalidIndex;
 
-			const auto memBlock{ this->alloc.allocate(alignof(T)) };
+			const auto memBlock{ this->allocator.allocate(alignof(T)) };
 			assert(memBlock.ptr != nullptr);
 			
 			++this->localLen;
@@ -71,7 +82,7 @@ export namespace fovere::Array
 			this->localLen = 0;
 			this->firstChunck = nullptr;
 			this->lastChunck = nullptr;
-			this->alloc.deallocate();
+			this->allocator.deallocate();
 		}
 
 		void remove(size_t elId) noexcept
@@ -82,7 +93,7 @@ export namespace fovere::Array
 			hfog::MemoryBlock memoryToDelete;
 			memoryToDelete.ptr = reinterpret_cast<byte_t*>(this->memoryEntry + elId);
 			memoryToDelete.size = sizeof(T);
-			this->alloc.deallocate(memoryToDelete);
+			this->allocator.deallocate(memoryToDelete);
 
 			auto currChunck{ &this->chuncks[elId] };
 			auto prevChunck{ currChunck->prev };
@@ -164,7 +175,7 @@ export namespace fovere::Array
 		}
 
 	private:
-		Alloc alloc;
+		Alloc allocator;
 		size_t localLen{ 0 };
 		std::remove_const_t<T>* memoryEntry{ nullptr };
 

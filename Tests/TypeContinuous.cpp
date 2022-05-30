@@ -23,15 +23,15 @@ TEST(TypeContinuous, tsLen)
 {
 	{
 		TestArray<int, 5> arr;
-		EXPECT_EQ(fovere::len(arr), 5);
+		EXPECT_EQ(fovere::len(arr), size_t(5));
 	}
 	{
 		TestArray<long long, 5> arr;
-		EXPECT_EQ(fovere::len(arr), 5);
+		EXPECT_EQ(fovere::len(arr), size_t(5));
 	}
 	{
 		TestArray<int, 500> arr;
-		EXPECT_EQ(fovere::len(arr), 500);
+		EXPECT_EQ(fovere::len(arr), size_t(500));
 	}
 }
 
@@ -100,18 +100,18 @@ TEST(TypeContinuous, tsCount)
 	{
 		TestArray<int, 5> arr;
 
-		fovere::insert(arr, 0, 1);
-		fovere::insert(arr, 1, 2);
-		fovere::insert(arr, 2, 3);
-		fovere::insert(arr, 3, 2);
-		fovere::insert(arr, 4, 4);
+		fovere::insert(arr, 0, size_t(1));
+		fovere::insert(arr, 1, size_t(2));
+		fovere::insert(arr, 2, size_t(3));
+		fovere::insert(arr, 3, size_t(2));
+		fovere::insert(arr, 4, size_t(4));
 
-		EXPECT_EQ(fovere::count(arr, 1), 1);
-		EXPECT_EQ(fovere::count(arr, 2), 2);
-		EXPECT_EQ(fovere::count(arr, 3), 1);
-		EXPECT_EQ(fovere::count(arr, 4), 1);
-		EXPECT_EQ(fovere::count(arr, 5), 0);
-		EXPECT_EQ(fovere::count(arr, -1), 0);
+		EXPECT_EQ(fovere::count(arr, 1), size_t(1));
+		EXPECT_EQ(fovere::count(arr, 2), size_t(2));
+		EXPECT_EQ(fovere::count(arr, 3), size_t(1));
+		EXPECT_EQ(fovere::count(arr, 4), size_t(1));
+		EXPECT_EQ(fovere::count(arr, 5), size_t(0));
+		EXPECT_EQ(fovere::count(arr, -1), size_t(0));
 
 	}
 }
