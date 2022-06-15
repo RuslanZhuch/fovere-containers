@@ -76,5 +76,11 @@
     <ClCompile Include="AdapterStatic.ixx">
       <Filter>lib\Adapters</Filter>
     </ClCompile>
+    <ClCompile Include="RingBuffer.ixx">
+      <Filter>lib\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="IteratorRing.ixx">
+      <Filter>lib\Iterators</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

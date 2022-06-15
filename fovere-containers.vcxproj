@@ -34,9 +34,11 @@
     <ClCompile Include="IteratorArrayStable.ixx" />
     <ClCompile Include="IteratorMonodirectional.ixx" />
     <ClCompile Include="IteratorMapSimple.ixx" />
+    <ClCompile Include="IteratorRing.ixx" />
     <ClCompile Include="IteratorsCore.ixx" />
     <ClCompile Include="Len.ixx" />
     <ClCompile Include="MapSimple.ixx" />
+    <ClCompile Include="RingBuffer.ixx" />
     <ClCompile Include="Utils.ixx" />
   </ItemGroup>
   <ItemGroup>
