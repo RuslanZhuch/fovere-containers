@@ -24,7 +24,7 @@ void testWithLocalBuffer(Func func)
 	using Alloc = allocRing_t<sizeof(int), numOfBytes>;
 	Alloc alloc;
 
-	fovere::Buffer::Ring<int, MAX_ELEMENTS, hfog::Sources::Local<numOfBytes>> arr(&alloc);
+	fovere::Buffer::Ring<int, MAX_ELEMENTS, Alloc> arr(&alloc, numOfBytes);
 
 	func(arr);
 	
@@ -39,7 +39,7 @@ void testWithExternalBuffer(Func func)
 	using Alloc = allocRingExt_t<sizeof(int)>;
 	Alloc alloc(hfog::MemoryBlock(extBuffer, sizeof(extBuffer)));
 
-	fovere::Buffer::Ring<int, MAX_ELEMENTS, hfog::Sources::External<>> arr(&alloc);
+	fovere::Buffer::Ring<int, MAX_ELEMENTS, Alloc> arr(&alloc, numOfBytes);
 
 	func(arr);
 
@@ -54,7 +54,7 @@ void testFull(Func func)
 
 }
 
-void tsImplCreation(auto arr)
+void tsImplCreation(auto&& arr)
 {
 
 	EXPECT_EQ(arr.getLen(), size_t(0));
@@ -88,11 +88,11 @@ void tsImplCreation(auto arr)
 TEST(RingBuffer, tsCreation)
 {
 
-	testFull<32_B, 32_B>([](auto arr) {tsImplCreation(arr); });
+	testFull<32_B, 32_B>([](auto&& arr) {tsImplCreation(arr); });
 
 }
 
-void tsImplRemoving(auto arr)
+void tsImplRemoving(auto&& arr)
 {
 
 	EXPECT_EQ(arr.getLen(), size_t(0));
@@ -118,11 +118,11 @@ void tsImplRemoving(auto arr)
 TEST(RingBuffer, tsRemoving)
 {
 
-	testFull<32_B, 32_B>([](auto arr) {tsImplRemoving(arr); });
+	testFull<32_B, 32_B>([](auto&& arr) {tsImplRemoving(arr); });
 
 }
 
-void tsImplRawData(auto arr)
+void tsImplRawData(auto&& arr)
 {
 
 	EXPECT_EQ(arr.getLen(), size_t(0));
@@ -168,11 +168,11 @@ void tsImplRawData(auto arr)
 TEST(RingBuffer, tsRawData)
 {
 
-	testFull<256_B, 256_B>([](auto arr) {tsImplRawData(arr); });
+	testFull<256_B, 256_B>([](auto&& arr) {tsImplRawData(arr); });
 
 }
 
-void tsImplOutOfMem(auto arr)
+void tsImplOutOfMem(auto&& arr)
 {
 
 	for (size_t itersLeft{ 5 }; itersLeft > 0; --itersLeft)
@@ -194,11 +194,11 @@ void tsImplOutOfMem(auto arr)
 TEST(RingBuffer, tsOutOfMem)
 {
 
-	testFull<64_B, 64_B>([](auto arr) {tsImplOutOfMem(arr); });
+	testFull<64_B, 64_B>([](auto&& arr) {tsImplOutOfMem(arr); });
 
 }
 
-void tsImplFull(auto arr)
+void tsImplFull(auto&& arr)
 {
 
 	for (size_t itersLeft{ 5 }; itersLeft > 0; --itersLeft)
@@ -226,11 +226,11 @@ void tsImplFull(auto arr)
 TEST(RingBuffer, tsFull)
 {
 
-	testFull<96_B, 96_B>([](auto arr) {tsImplFull(arr); });
+	testFull<96_B, 96_B>([](auto&& arr) {tsImplFull(arr); });
 
 }
 
-void tsImplForEach(auto arr)
+void tsImplForEach(auto&& arr)
 {
 
 	static constexpr auto NUM_OF_ELEMENTS{ 3 };
@@ -263,6 +263,6 @@ void tsImplForEach(auto arr)
 TEST(RingBuffer, tsForEach)
 {
 
-	testFull<16_B, 16_B>([](auto arr) {tsImplForEach(arr); });
+	testFull<16_B, 16_B>([](auto&& arr) {tsImplForEach(arr); });
 
 }

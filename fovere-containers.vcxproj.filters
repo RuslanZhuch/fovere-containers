@@ -17,6 +17,9 @@
     <Filter Include="lib\Adapters">
       <UniqueIdentifier>{e3636362-214f-437d-a85d-a86f273e54d5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="lib\Transport">
+      <UniqueIdentifier>{e65e9a59-cfa1-4aa5-976f-00079937d2bc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Len.ixx">
@@ -81,6 +84,9 @@
     </ClCompile>
     <ClCompile Include="IteratorRing.ixx">
       <Filter>lib\Iterators</Filter>
+    </ClCompile>
+    <ClCompile Include="Queue.ixx">
+      <Filter>lib\Transport</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

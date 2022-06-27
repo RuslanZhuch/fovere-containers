@@ -32,6 +32,7 @@
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <EnableASAN>false</EnableASAN>
+    <UseDebugLibraries>true</UseDebugLibraries>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings" />
@@ -49,6 +50,7 @@
     <ClCompile Include="ArrayUniversal.cpp" />
     <ClCompile Include="MapSimple.cpp" />
     <ClCompile Include="Protection.cpp" />
+    <ClCompile Include="TransportQueue.cpp" />
     <ClCompile Include="RangeBasedLoopIterator.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

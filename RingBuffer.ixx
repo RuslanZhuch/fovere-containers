@@ -8,17 +8,19 @@ export import fovere.Utils;
 
 import hfog.Core;
 import hfog.Algorithms.Ring;
-import hfog.Sources.Common;
+import hfog.Sources.Ext;
 
 import :Iterator;
 
 export namespace fovere::Buffer
 {
 
-	template<typename T, size_t MAX_ELEMENTS, hfog::Sources::CtSource Source>
+	template<typename T, size_t MAX_ELEMENTS, hfog::CtAllocator Alloc>
 	class Ring
 	{
-		using Alloc = hfog::Algorithms::Ring<Source, sizeof(T), hfog::MemoryUtils::Align<sizeof(T)>>;
+
+//		template <hfog::Sources::CtSource Source>
+		using InnerAlloc = hfog::Algorithms::Ring<hfog::Sources::External<>, sizeof(T), hfog::MemoryUtils::Align<sizeof(T)>>;
 		using TIter = Buffer::Iterator<T, hfog::MemoryBlock>;
 
 	public:
@@ -27,8 +29,8 @@ export namespace fovere::Buffer
 	public:
 		Ring() = delete;
 
-		Ring(Alloc* alloc)
-			:allocator(alloc)
+		Ring(Alloc* alloc, mem_t capacity)
+			:allocator(alloc->allocate(capacity))
 		{
 			std::memset(this->memBlocks, 0, sizeof(this->memBlocks));
 		}
@@ -40,7 +42,7 @@ export namespace fovere::Buffer
 				return nullptr;
 
 			const auto appendSize{ sizeof(T) * size };
-			const auto memBlock{ allocator->allocate(appendSize) };
+			const auto memBlock{ allocator.allocate(appendSize) };
 			if (memBlock.ptr == nullptr)
 				return nullptr;
 
@@ -73,7 +75,7 @@ export namespace fovere::Buffer
 			const auto copyBytes{ std::min(sizeToCopy, memBlock.size) };
 			std::memcpy(dest, memBlock.ptr, copyBytes);
 
-			this->allocator->deallocate(memBlock);
+			this->allocator.deallocate(memBlock);
 			--this->localLen;
 
 			return copyBytes;
@@ -85,7 +87,7 @@ export namespace fovere::Buffer
 			this->localLen = 0;
 			this->addPoint = 0;
 			this->removePoint = 0;
-			this->allocator->deallocate();
+			this->allocator.deallocate();
 		}
 
 		[[nodiscard]] constexpr auto begin() noexcept
@@ -109,7 +111,8 @@ export namespace fovere::Buffer
 
 	private:
 		size_t localLen{ 0 };
-		Alloc* allocator{ nullptr };
+//		Alloc* extAllocator{ nullptr };
+		InnerAlloc allocator;
 
 		hfog::MemoryBlock memBlocks[MAX_ELEMENTS];
 

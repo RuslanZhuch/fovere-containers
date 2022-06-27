@@ -38,6 +38,7 @@
     <ClCompile Include="IteratorsCore.ixx" />
     <ClCompile Include="Len.ixx" />
     <ClCompile Include="MapSimple.ixx" />
+    <ClCompile Include="Queue.ixx" />
     <ClCompile Include="RingBuffer.ixx" />
     <ClCompile Include="Utils.ixx" />
   </ItemGroup>
@@ -51,7 +52,7 @@
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{4bc32c5e-cb25-41af-b1c2-8a8b4061e1ac}</ProjectGuid>
     <RootNamespace>foverecontainers</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.22000.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -73,6 +74,8 @@
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <EnableASAN>false</EnableASAN>
+    <PreferredToolArchitecture>
+    </PreferredToolArchitecture>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -162,6 +165,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <EnableModules>true</EnableModules>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>
