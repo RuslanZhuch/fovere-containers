@@ -34,7 +34,7 @@ export namespace fovere::Transport
 		Queue() = delete;
 
 		Queue(Alloc* alloc, size_t capacity)
-			:allocator(alloc->allocate(capacity * hfog::MemoryUtils::Align<ALIGNMENT>::compute(sizeof(Node))))
+			:allocator(alloc->allocate(hfog::MemoryUtils::Align<ALIGNMENT>::compute(capacity * sizeof(Node))))
 		{	}
 
 		[[nodiscard]] bool push(const T& data) noexcept

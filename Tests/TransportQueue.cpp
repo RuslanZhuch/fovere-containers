@@ -1,19 +1,20 @@
 #include "pch.h"
 
 //import AlgLinear;
-import hfog.Algorithms.Ring;
+import hfog.Algorithms.Unified;
 import hfog.Sources.Local;
 import hfog.Sources.Ext;
+import hfog.Alloc;
 
 import fovere.Transport.Queue;
 
 using namespace hfog::MemoryUtils::Literals;
 
 template<mem_t alignment>
-using allocRingExt_t = hfog::Algorithms::Ring<hfog::Sources::External<>, alignment>;
+using allocRingExt_t = hfog::Alloc::UnifiedExt<alignment, 512_B>;
 
 template<mem_t alignment, mem_t bytes>
-using allocRing_t = hfog::Algorithms::Ring<hfog::Sources::Local<bytes>, alignment>;
+using allocRing_t = hfog::Alloc::Unified<alignment, 512_B>;
 
 static constexpr size_t MAX_ELEMENTS{ 10 };
 
@@ -30,7 +31,7 @@ void testWithLocalBuffer(Func func)
 {
 
 	constexpr auto numOfBytes{ numOfElements * 32 };
-	using Alloc = allocRing_t<sizeof(type_t), 8>;
+	using Alloc = allocRing_t<sizeof(type_t), 128>;
 	Alloc alloc;
 
 	fovere::Transport::Queue<type_t, Alloc> arr(&alloc, numOfElements);
@@ -43,10 +44,10 @@ template <mem_t numOfElements, typename Func>
 void testWithExternalBuffer(Func func)
 {
 
-	constexpr auto numOfBytes{ numOfElements * 32 };
+	constexpr auto numOfBytes{ 1_kB };
 	byte_t extBuffer[numOfBytes];
 
-	using Alloc = allocRingExt_t<8>;
+	using Alloc = allocRingExt_t<160>;
 	Alloc alloc(hfog::MemoryBlock(extBuffer, sizeof(extBuffer)));
 
 	fovere::Transport::Queue<type_t, Alloc> arr(&alloc, numOfElements);
@@ -128,6 +129,42 @@ TEST(TransportQueue, tsOneAtATime)
 	testFull<4>([](auto&& arr) {tsImplOneAtATime(arr); });
 
 }
+
+//void tsImplOneAtATimeInverse(auto&& arr)
+//{
+//
+//	EXPECT_EQ(arr.getLen(), size_t(0));
+//	static constexpr auto NUM_OF_ITERS{ 100 };
+//
+//	for (int iterId{ 0 }; iterId < NUM_OF_ITERS; ++iterId)
+//	{
+//
+//		type_t data{};
+//		if (iterId == 0)
+//		{
+//			EXPECT_FALSE(arr.pop(&data));
+//		}
+//		else
+//		{
+//			EXPECT_TRUE(arr.pop(&data));
+//			EXPECT_EQ(data.i, iterId);
+//			EXPECT_EQ(arr.getLen(), size_t(0));
+//		}
+//
+//		EXPECT_TRUE(arr.push({ iterId + 1 }));
+//		EXPECT_EQ(arr.getLen(), size_t(1));
+//
+//
+//	}
+//
+//}
+//
+//TEST(TransportQueue, tsOneAtATimeInverse)
+//{
+//
+//	testFull<4>([](auto&& arr) {tsImplOneAtATimeInverse(arr); });
+//
+//}
 
 void tsImplBottleneck(auto&& arr)
 {
