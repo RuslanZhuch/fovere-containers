@@ -44,10 +44,10 @@ template <mem_t numOfElements, typename Func>
 void testWithExternalBuffer(Func func)
 {
 
-	constexpr auto numOfBytes{ 1_kB };
+	constexpr auto numOfBytes{ 512_B + 64_B};
 	byte_t extBuffer[numOfBytes];
 
-	using Alloc = allocRingExt_t<160>;
+	using Alloc = allocRingExt_t<150>;
 	Alloc alloc(hfog::MemoryBlock(extBuffer, sizeof(extBuffer)));
 
 	fovere::Transport::Queue<type_t, Alloc> arr(&alloc, numOfElements);
