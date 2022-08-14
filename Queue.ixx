@@ -73,10 +73,52 @@ export namespace fovere::Transport
 
 		[[nodiscard]] constexpr auto getLen() const noexcept
 		{
+			std::scoped_lock(this->mt);
 			return this->localLen;
 		}
 
-		[[nodiscard]] bool pop(T* dest) noexcept
+		[[nodiscard]] bool copy(T* dest) noexcept
+		{
+
+			std::scoped_lock(this->mt);
+
+			if (this->head == nullptr)
+				return false;
+
+			auto node{ this->head };
+
+			std::memcpy(dest, &node->data, sizeof(T));
+
+			return true;
+
+		}
+
+		void pop() noexcept
+		{
+
+			std::scoped_lock(this->mt);
+
+			if (this->head == nullptr)
+				return false;
+
+			auto node{ this->head };
+
+			this->head = node->next;
+			if (this->head == nullptr)
+				this->tail = nullptr;
+
+			hfog::MemoryBlock blockToDeallocate;
+			blockToDeallocate.ptr = reinterpret_cast<byte_t*>(node);
+			blockToDeallocate.size = hfog::MemoryUtils::Align<ALIGNMENT>::compute(sizeof(Node));
+
+			this->allocator.deallocate(blockToDeallocate);
+			--this->localLen;
+
+			return true;
+
+		}
+
+		[[nodiscard]] bool copyAndPop(T* dest) noexcept
 		{
 
 			std::scoped_lock(this->mt);
@@ -119,7 +161,7 @@ export namespace fovere::Transport
 		Node* head{ nullptr };
 		Node* tail{ nullptr };
 
-		std::mutex mt;
+		mutable std::mutex mt;
 
 	};
 

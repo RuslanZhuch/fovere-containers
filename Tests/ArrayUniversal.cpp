@@ -65,7 +65,7 @@ void testFull(Func func)
 		testWithLocalBuffer<allocUnified_t<minAlignment * universalMultiplyer, maxAllocBytes * universalMultiplyer>>(func);
 
 	testWithExternalBuffer<allocIslandsExt_t<minAlignment, maxAllocBytes, numOfChunks>, numOfExtBytes>(func);
-	testWithExternalBuffer<allocPoolExt_t<maxAllocBytes, numOfChunks>, numOfExtBytes>(func);
+	testWithExternalBuffer<allocPoolExt_t<maxAllocBytes, maxAllocBytes * numOfChunks>, numOfExtBytes * numOfChunks>(func);
 	if constexpr (universal)
 		testWithExternalBuffer<allocUnifiedExt_t<minAlignment * universalMultiplyer, maxAllocBytes * universalMultiplyer>, 
 		numOfExtBytes * universalMultiplyer>(func);
@@ -282,6 +282,44 @@ TEST(ArrayUniversal, tsLimits)
 {
 
 	testFull<8_B, 2, 64_B, false>([](auto arr) {tsImplLimits(arr); });
+
+}
+
+void tsImplResize(auto arr)
+{
+
+	EXPECT_EQ(arr.getLen(), size_t(0));
+
+	EXPECT_EQ(arr.resize(3), size_t(3));
+
+	EXPECT_EQ(arr.getLen(), size_t(3));
+
+	EXPECT_EQ(arr[0], 0);
+	EXPECT_EQ(arr[1], 0);
+	EXPECT_EQ(arr[2], 0);
+
+	arr[0] = 1;
+	arr[1] = 2;
+	arr[2] = 3;
+
+	EXPECT_EQ(arr[0], 1);
+	EXPECT_EQ(arr[1], 2);
+	EXPECT_EQ(arr[2], 3);
+
+	EXPECT_EQ(arr.resize(1), size_t(1));
+
+	EXPECT_EQ(arr.getLen(), size_t(1));
+	EXPECT_EQ(arr[0], 1);
+
+	EXPECT_EQ(arr.resize(0), size_t(0));
+	EXPECT_EQ(arr.getLen(), size_t(0));
+
+}
+
+TEST(ArrayUniversal, tsResize)
+{
+
+	testFull<128_B, 2, 128_B, false>([](auto arr) {tsImplResize(arr); });
 
 }
 

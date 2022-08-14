@@ -86,7 +86,7 @@ void tsImplCreation(auto&& arr)
 		for (int elementId{ 0 }; elementId < NUM_OF_ELEMENTS; ++elementId)
 		{
 			type_t data{};
-			EXPECT_TRUE(arr.pop(&data));
+			EXPECT_TRUE(arr.copyAndPop(&data));
 			EXPECT_EQ(data.i, elementId + 1);
 			EXPECT_EQ(arr.getLen(), size_t(NUM_OF_ELEMENTS - elementId - 1));
 		}
@@ -115,7 +115,7 @@ void tsImplOneAtATime(auto&& arr)
 		EXPECT_EQ(arr.getLen(), size_t(1));
 
 		type_t data{};
-		EXPECT_TRUE(arr.pop(&data));
+		EXPECT_TRUE(arr.copyAndPop(&data));
 		EXPECT_EQ(data.i, iterId + 1);
 		EXPECT_EQ(arr.getLen(), size_t(0));
 
@@ -124,6 +124,49 @@ void tsImplOneAtATime(auto&& arr)
 }
 
 TEST(TransportQueue, tsOneAtATime)
+{
+
+	testFull<4>([](auto&& arr) {tsImplOneAtATime(arr); });
+
+}
+
+
+void tsImplSeparateCopyAndPop(auto&& arr)
+{
+
+	EXPECT_EQ(arr.getLen(), size_t(0));
+	static constexpr auto NUM_OF_ELEMENTS{ 3 };
+
+	for (size_t itersLeft{ 10 }; itersLeft > 0; --itersLeft)
+	{
+
+		for (int elementId{ 0 }; elementId < NUM_OF_ELEMENTS; ++elementId)
+		{
+
+			const type_t pushEl{ elementId + 1 };
+			EXPECT_TRUE(arr.push(pushEl));
+			EXPECT_EQ(arr.getLen(), size_t(elementId + 1));
+
+		}
+
+		for (int elementId{ 0 }; elementId < NUM_OF_ELEMENTS; ++elementId)
+		{
+			type_t data{};
+			EXPECT_TRUE(arr.copy(&data));
+			EXPECT_EQ(data.i, elementId + 1);
+			EXPECT_EQ(arr.getLen(), size_t(NUM_OF_ELEMENTS - elementId));
+			EXPECT_TRUE(arr.copy(&data));
+			EXPECT_EQ(data.i, elementId + 1);
+			EXPECT_EQ(arr.getLen(), size_t(NUM_OF_ELEMENTS - elementId));
+			arr.pop();
+			EXPECT_EQ(arr.getLen(), size_t(NUM_OF_ELEMENTS - elementId - 1));
+		}
+
+	}
+
+}
+
+TEST(TransportQueue, tsSeparateCopyAndPop)
 {
 
 	testFull<4>([](auto&& arr) {tsImplOneAtATime(arr); });
@@ -142,11 +185,11 @@ TEST(TransportQueue, tsOneAtATime)
 //		type_t data{};
 //		if (iterId == 0)
 //		{
-//			EXPECT_FALSE(arr.pop(&data));
+//			EXPECT_FALSE(arr.copyAndPop(&data));
 //		}
 //		else
 //		{
-//			EXPECT_TRUE(arr.pop(&data));
+//			EXPECT_TRUE(arr.copyAndPop(&data));
 //			EXPECT_EQ(data.i, iterId);
 //			EXPECT_EQ(arr.getLen(), size_t(0));
 //		}
@@ -188,7 +231,7 @@ void tsImplBottleneck(auto&& arr)
 		EXPECT_FALSE(arr.push({ NUM_OF_ELEMENTS + 1 }));
 
 		type_t data{};
-		EXPECT_TRUE(arr.pop(&data));
+		EXPECT_TRUE(arr.copyAndPop(&data));
 		EXPECT_EQ(data.i, 1);
 
 		EXPECT_TRUE(arr.push({ NUM_OF_ELEMENTS + 1 }));
@@ -197,7 +240,7 @@ void tsImplBottleneck(auto&& arr)
 		{
 
 			type_t data{};
-			EXPECT_TRUE(arr.pop(&data));
+			EXPECT_TRUE(arr.copyAndPop(&data));
 			EXPECT_EQ(data.i, elementId + 2);
 			EXPECT_EQ(arr.getLen(), size_t(NUM_OF_ELEMENTS - elementId - 1));
 

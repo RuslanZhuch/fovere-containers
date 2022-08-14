@@ -92,6 +92,42 @@ TEST(RingBuffer, tsCreation)
 
 }
 
+void tsImplPop(auto&& arr)
+{
+
+	EXPECT_EQ(arr.getLen(), size_t(0));
+	static constexpr auto NUM_OF_ELEMENTS{ 3 };
+
+	for (size_t itersLeft{ 10 }; itersLeft > 0; --itersLeft)
+	{
+
+		for (int elementId{ 0 }; elementId < NUM_OF_ELEMENTS; ++elementId)
+		{
+
+			auto value{ arr.append() };
+			EXPECT_NE(value, nullptr);
+			*value = elementId + 1;
+			EXPECT_EQ(arr.getLen(), size_t(elementId + 1));
+
+		}
+
+		for (int elementId{ 0 }; elementId < NUM_OF_ELEMENTS; ++elementId)
+		{
+			arr.pop();
+			EXPECT_EQ(arr.getLen(), size_t(NUM_OF_ELEMENTS - elementId - 1));
+		}
+
+	}
+
+}
+
+TEST(RingBuffer, tsPop)
+{
+
+	testFull<32_B, 32_B>([](auto&& arr) {tsImplPop(arr); });
+
+}
+
 void tsImplRemoving(auto&& arr)
 {
 

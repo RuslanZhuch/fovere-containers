@@ -63,6 +63,20 @@ export namespace fovere::Buffer
 			return this->localLen;
 		}
 
+		void pop() noexcept
+		{
+
+			if (this->localLen == 0)
+				return;
+
+			const auto memBlock{ this->memBlocks[this->removePoint] };
+			this->removePoint = this->shiftPoint(this->removePoint);
+
+			this->allocator.deallocate(memBlock);
+			--this->localLen;
+
+		}
+
 		[[nodiscard]] mem_t copyAndPop(T* dest, size_t sizeToCopy) noexcept
 		{
 

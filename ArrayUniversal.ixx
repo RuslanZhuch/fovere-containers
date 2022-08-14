@@ -1,6 +1,7 @@
 module;
 #include <cassert>
 #include <memory>
+#include <bit>
 
 export module fovere.Array.Universal;
 export import fovere.Utils;
@@ -37,6 +38,48 @@ export namespace fovere::Array
 			*(this->memoryEntry + this->localLen) = value;
 
 			return this->localLen++;
+
+		}
+
+		//TODO: Test
+		[[nodiscard]] size_t append(T&& value) noexcept
+		{
+
+			if (!this->tryResizeUp())
+				return invalidIndex;
+
+			*(this->memoryEntry + this->localLen) = std::move(value);
+
+			return this->localLen++;
+
+		}
+
+		[[nodiscard]] size_t resize(size_t newSize) noexcept
+		{
+
+			if (newSize > this->capacity)
+			{
+
+				const auto pow2Alignment{ std::bit_ceil(newSize) };
+				const auto memBlock{ this->allocator->allocate(pow2Alignment * sizeof(T)) };
+				if (memBlock.ptr == nullptr)
+					return this->localLen;
+
+				std::memcpy(memBlock.ptr, this->memory.ptr, this->memory.size);
+				this->allocator->deallocate(this->memory);
+				this->memory = memBlock;
+				this->memoryEntry = reinterpret_cast<T*>(this->memory.ptr);
+			
+				const auto numOfElementsAppended{ newSize - this->localLen };
+				const auto firstAppendedElementId{ this->localLen };
+
+				std::memset(this->memoryEntry + firstAppendedElementId, 0, numOfElementsAppended * sizeof(T));
+
+			}
+
+			this->localLen = newSize;
+
+			return this->localLen;
 
 		}
 
